@@ -80,7 +80,7 @@ RSpec.describe EventSourcery::Postgres::Projector do
   end
 
   describe '#project' do
-    let(:event) { new_event(type: :terms_accepted) }
+    let(:event) { TermsAccepted.new }
 
     it "processes events via project method" do
       projector = new_projector do
@@ -124,7 +124,7 @@ RSpec.describe EventSourcery::Postgres::Projector do
   describe '#process' do
     before { projector.reset }
 
-    let(:event) { EventSourcery::Event.new(body: {}, aggregate_id: aggregate_id, type: :terms_accepted, id: 1) }
+    let(:event) { TermsAccepted.new(body: {}, aggregate_id: aggregate_id, id: 1) }
 
     it "processes events it's interested in" do
       projector.process(event)
@@ -134,7 +134,7 @@ RSpec.describe EventSourcery::Postgres::Projector do
 
   describe '#subscribe_to' do
     let(:event_store) { double(:event_store) }
-    let(:events) { [new_event(id: 1), new_event(id: 2)] }
+    let(:events) { [TermsAccepted.new(id: 1, aggregate_id: SecureRandom.uuid), TermsAccepted.new(id: 2, aggregate_id: SecureRandom.uuid)] }
     let(:subscription_master) { spy(EventSourcery::EventStore::SignalHandlingSubscriptionMaster) }
     let(:projector_class) {
       Class.new do

@@ -30,7 +30,7 @@ RSpec.describe EventSourcery::Postgres::EventStore do
   end
 
   describe '#subscribe' do
-    let(:event) { new_event(aggregate_id: aggregate_id) }
+    let(:event) { ItemAdded.new(aggregate_id: aggregate_id) }
     let(:subscription_master) { spy(EventSourcery::EventStore::SignalHandlingSubscriptionMaster) }
 
     it 'notifies of new events' do
@@ -47,14 +47,13 @@ RSpec.describe EventSourcery::Postgres::EventStore do
 
   context 'aggregates table version' do
     def save_event(expected_version: nil)
-      event_store.sink(new_event(aggregate_id: aggregate_id,
-                       type: :billing_details_provided,
+      event_store.sink(ItemRemoved.new(aggregate_id: aggregate_id,
                        body: { my_event: 'data' }),
                        expected_version: expected_version)
     end
 
     def add_event
-      event_store.sink(new_event(aggregate_id: aggregate_id))
+      event_store.sink(ItemAdded.new(aggregate_id: aggregate_id))
     end
 
     def last_event

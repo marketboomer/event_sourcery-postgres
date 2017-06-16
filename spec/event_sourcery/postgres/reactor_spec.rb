@@ -111,7 +111,7 @@ RSpec.describe EventSourcery::Postgres::Reactor do
 
   describe '#reset' do
     it 'resets last processed event ID' do
-      reactor.process(OpenStruct.new(type: :terms_accepted, id: 1))
+      reactor.process(TermsAccepted.new(id: 1))
       reactor.reset
       expect(tracker.last_processed_event_id(:test_processor)).to eq 0
     end
@@ -144,7 +144,7 @@ RSpec.describe EventSourcery::Postgres::Reactor do
   end
 
   describe '#process' do
-    let(:event) { OpenStruct.new(type: :terms_accepted, id: 1) }
+    let(:event) { TermsAccepted.new(id: 1) }
 
     it "projects events it's interested in" do
       reactor.process(event)
